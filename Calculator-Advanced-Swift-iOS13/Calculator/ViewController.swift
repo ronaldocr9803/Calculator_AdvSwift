@@ -13,33 +13,36 @@ class ViewController: UIViewController {
     @IBOutlet weak var displayLabel: UILabel!
     fileprivate var isFinishedTypingNumber: Bool = true
     
-//    private var displayValue: Double {
-//        get {
-//            self.displayValue = displayLabel.text
-//        }
-//    }
+    private var displayValue: Double {
+        
+        get {
+            guard let number = Double(displayLabel.text!) else {
+                fatalError("Cannot convert display label text to Double")
+            }
+            return number
+        }
+        
+        set {
+            displayLabel.text = "\(newValue)"
+        }
+    }
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         
         //What should happen when a non-number button is pressed
         isFinishedTypingNumber = true
-        guard let number = Double(displayLabel.text!) else {
-            fatalError("Cannot convert display label text to Double")
-        }
         if let calcValue = sender.currentTitle {
             if calcValue == "+/-" {
-                displayLabel.text = "\(number * -1)"
+                displayValue *= -1
             } else if calcValue == "AC" {
-                displayLabel.text = "0"
+                displayValue = 0
             } else if calcValue == "%" {
-                displayLabel.text = "\(number * 0.01)"
+                displayValue *= 0.01
             }
             
         }
-        
-    
     }
-
+    
     var lstNum:[String] = []
     @IBAction func numButtonPressed(_ sender: UIButton) {
         
@@ -52,11 +55,8 @@ class ViewController: UIViewController {
             }
             else {
                 if numValue == "." {
-                    guard let currentDisplayValue = Double(displayLabel.text!) else {
-                        fatalError("Cannot convert display label text to a Double")
-                        
-                    }
-                    let isInt = floor(currentDisplayValue) == currentDisplayValue
+            
+                    let isInt = floor(displayValue) == displayValue
                     if !isInt {
                         return
                     }
